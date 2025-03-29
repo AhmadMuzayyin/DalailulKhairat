@@ -1,0 +1,20 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.Dalailulkhairat" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="tabStyle">@style/CustomTabLayout</item>
+    </style>
+
+    <style name="Theme.Dalailulkhairat" parent="Base.Theme.Dalailulkhairat" />
+    <style name="CustomTabLayout" parent="Widget.Material3.TabLayout">
+        <item name="tabIndicatorColor">@color/tab_indicator_color</item>
+        <item name="tabSelectedTextColor">@color/tab_selected_color</item>
+        <item name="tabTextColor">@color/text_gray</item>
+        <item name="tabIndicatorHeight">2dp</item>
+    </style>
+    <style name="Theme.App.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/white</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/splash_screen</item>
+        <item name="postSplashScreenTheme">@style/Theme.Dalailulkhairat</item>
+    </style>
+</resources>

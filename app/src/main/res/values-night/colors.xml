@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Warna yang sudah ada -->
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFF</color>
+    <color name="primary">#4DB6AC</color>
+    <color name="tab_selected_color">#4DB6AC</color>
+    <color name="tab_indicator_color">#4DB6AC</color>
+    <color name="text_gray">#E0E0E0</color>
+
+    <color name="background">#121212</color>
+    <color name="surface">#1E1E1E</color>
+    <color name="card_background">#272727</color>
+    <color name="card_stroke">#323232</color>
+    <color name="text_secondary">#A0A0A0</color>
+</resources>

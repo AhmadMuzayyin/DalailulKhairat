@@ -1,0 +1,470 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="monitor-signature" content="monitor:player:html5">
+    <meta property="og:image" content="files/shot.png" />
+    <meta property="og:title" content="Dalailul Khoirot" />
+    <meta property="og:description" content="Dalailul Khoirot" />
+    <meta name="og:image" content="files/shot.png" />
+    <link rel="image_src" href="files/shot.png" />
+    <meta name="Description" content="%Description%">
+    <title>Dalailul Khoirot</title>
+    <link rel="stylesheet" href="style/style.css" />
+    <link rel="stylesheet" href="style/player.css" />
+    <link rel="stylesheet" href="style/phoneTemplate.css" />
+    <link rel="stylesheet" href="style/font-awesome/css/all.min.css">
+    <script src="javascript/jquery-1.9.1.min.js"></script>
+    <style>
+        /* CSS untuk navbar dan floating navigation */
+        .top-navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            align-items: center;
+            padding: 1px;
+            background-color: #f8f9fa;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+
+        .back-button {
+            background: none;
+            border: none;
+            padding: 0.5rem;
+            cursor: pointer;
+            color: #374151;
+        }
+
+        .top-navbar h1 {
+            flex: 1;
+            margin-left: 1rem;
+            font-size: 1.1rem;
+            color: #374151;
+        }
+
+        .bookmark-btn {
+            background: none;
+            border: none;
+            padding: 0.5rem;
+            cursor: pointer;
+            color: #6b7280;
+        }
+
+        .bookmark-btn.active {
+            color: #10b981;
+        }
+
+        .bookmark-btn i {
+            font-size: 1.2rem;
+        }
+
+        /* Style untuk container utama toolbar */
+        .fbToolBar {
+            position: fixed !important;
+            bottom: 2rem !important;
+            left: 50% !important;
+            transform: translateX(-50%) !important;
+            display: flex !important;
+            align-items: center !important;
+            background-color: rgba(75, 75, 75, 0.9) !important;
+            padding: 0.5rem !important;
+            border-radius: 2rem !important;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2) !important;
+            z-index: 1000 !important;
+            width: auto !important;
+            justify-content: center !important;
+        }
+
+        /* Style untuk button groups (left & right) */
+        .buttonBar.left,
+        .buttonBar.right {
+            display: flex !important;
+            align-items: center !important;
+        }
+
+        /* Style untuk buttons */
+        .fbToolBar .button {
+            position: static !important;
+            padding: 0.5rem !important;
+            margin: 0 0.25rem !important;
+            cursor: pointer !important;
+            background: none !important;
+        }
+
+        /* Hide button text labels */
+        .fbToolBar .button span {
+            display: none !important;
+        }
+
+        /* Style untuk input halaman */
+        #currentPageIndexTextField {
+            background: white !important;
+            color: #374151 !important;
+            padding: 0.25rem 0.5rem !important;
+            border-radius: 1rem !important;
+            margin: 0 0.5rem !important;
+            font-weight: 500 !important;
+            width: 4rem !important;
+            text-align: center !important;
+            border: none !important;
+            height: 2rem !important;
+        }
+
+        /* Remove input spinners */
+        #currentPageIndexTextField::-webkit-outer-spin-button,
+        #currentPageIndexTextField::-webkit-inner-spin-button {
+            -webkit-appearance: none !important;
+            margin: 0 !important;
+        }
+
+        /* Firefox */
+        #currentPageIndexTextField {
+            -moz-appearance: textfield !important;
+        }
+
+        /* Style untuk pageBar */
+        .pageBar {
+            display: flex !important;
+            align-items: center !important;
+            width: auto !important;
+        }
+
+        /* Style untuk pageNumber container */
+        .pageNumber {
+            position: static !important;
+            display: flex !important;
+            align-items: center !important;
+        }
+
+        /* Style untuk icons */
+        .fbToolBar .button img {
+            width: 20px !important;
+            height: 20px !important;
+            opacity: 0.9 !important;
+        }
+
+        /* Hover effect untuk buttons */
+        .fbToolBar .button:hover {
+            background-color: rgba(255, 255, 255, 0.1) !important;
+            border-radius: 50% !important;
+        }
+    </style>
+</head>
+
+<body>
+    <!--     <dir style="visibility: hidden;">
+        <input type="checkbox" id="like" onclick="onClickFavourite()" />
+        <label for="like" id="like_label">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M12 21.35l-1.45-1.32c-5.15-4.67-8.55-7.75-8.55-11.53 0-3.08 2.42-5.5 5.5-5.5 1.74 0 3.41.81 4.5 2.09 1.09-1.28 2.76-2.09 4.5-2.09 3.08 0 5.5 2.42 5.5 5.5 0 3.78-3.4 6.86-8.55 11.54l-1.45 1.31z" />
+            </svg>
+        </label>
+    </dir>
+    <dir style="visibility: hidden;">
+        <p id="app_title">Al Quran (Hafizi 15 lines)</p>
+    </dir> -->
+    <!-- <div class="top-navbar">
+        <button class="back-button">
+            <i class="fas fa-arrow-left"></i>
+        </button>
+        <h1>Dalailul Khoirot</h1>
+        <button id="toggle-bookmark" class="bookmark-btn">
+            <i class="fas fa-star"></i>
+        </button>
+    </div> -->
+    <script src="javascript/config.js"></script>
+    <script src="javascript/LoadingJS.js"></script>
+    <script src="javascript/main.js"></script>
+    <script src="javascript/editor.js"></script>
+    <script src="files/search/book_config.js"></script>
+    <link rel="stylesheet" href="style/template.css" />
+    <script type="text/javascript">
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-00000000-0']);
+        _gaq.push(['_trackPageview']);
+        (function () {
+            var ga = document.createElement('script');
+            ga.type = 'text/javascript';
+            ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(ga, s);
+        })();
+
+        var sendvisitinfo = function (type, page) { };
+    </script>
+    <script src="javascript/MovingBackgrounds.min.js"></script>
+    <link rel="stylesheet" href="style/MovingBackgrounds.min.css" />
+    <script src="javascript/flipHtml5.hiSlider2.min.js"></script>
+    <link rel="stylesheet" href="style/hiSlider2.min.css" />
+    <script src="slide_javascript/slideJS.js"></script>
+    <script type="text/javascript">
+        window.onload = function () {
+            offFlipSound();
+            // global.phoneGotoPagePanel.showOrHide();
+            // addFavouriteButton();
+            document.getElementById("menu").style.visibility = "hidden";
+            //     var element = document.getElementById("menu");
+            // element.classList.add("tipsBoxShadow");
+            //     var element2 = document.getElementById("topBar");
+            // element2.classList.add("tipsBoxShadow");
+        };
+
+        // function addFavouriteButton() {
+        //     var dom1 = document.getElementById("like");
+        //     document.getElementById("topBar").appendChild(dom1);
+        //     var dom2 = document.getElementById("like_label");
+        //     document.getElementById("topBar").appendChild(dom2);
+        //     var dom3 = document.getElementById("app_title");
+        //     document.getElementById("topBar").appendChild(dom3);
+        // }
+        var page_no = 0;
+        window.onhashchange = function () {
+            var str = window.location.hash;
+            var res = str.split("#p=");
+            page_no = res[1];
+            // document.getElementById("demo").innerHTML = res[1];
+            // alert("HASH CHANGED - new has " + page_no);
+            Android.showToast(res[1]);
+        }
+        function onFlipSound() {
+            bookConfig.FlipSound = true;
+        }
+        function offFlipSound() {
+            bookConfig.FlipSound = false;
+        }
+
+        // Opsional: Fungsi untuk memanggil kembali ke Android
+        function notifyAndroid(message) {
+            AndroidBridge.navigateToPage(message);
+        }
+        // function showMenu() {
+        //     document.getElementById("menu").style.visibility = "visible";
+        // }
+        // function hideMenu() {
+        //     document.getElementById("menu").style.visibility = "hidden";
+        // }
+
+        // function onClickFavourite() {
+        //     var checkBox = document.getElementById("like");
+        //     if (checkBox.checked == true) {
+        //         Android.showToast("yes");
+        //     } else {
+        //         Android.showToast("no");
+        //     }
+        // }
+
+        // Fungsi untuk menyimpan bookmark
+        const chapters = {
+            2: { name: "Muqoddimah", arabicName: "المقدمة" },
+            26: { name: "Hari Senin", arabicName: "يوم الإثنين" },
+            46: { name: "Hari Selasa", arabicName: "يوم الثلاثاء" },
+            66: { name: "Hari Rabu", arabicName: "يوم الأربعاء" },
+            88: { name: "Hari Kamis", arabicName: "يوم الخميس" },
+            110: { name: "Hari Jumat", arabicName: "يوم الجمعة" },
+            136: { name: "Hari Sabtu", arabicName: "يوم السبت" },
+            162: { name: "Hari Ahad", arabicName: "يوم الأحد" },
+            162: { name: "Do'a", arabicName: "الدعاء" }
+        };
+
+        // Fungsi untuk mendapatkan informasi chapter berdasarkan halaman
+        function getChapterInfo(pageNumber) {
+            // Mencari chapter yang sesuai dengan halaman
+            const chapterPages = Object.keys(chapters).map(Number);
+            let chapterPage = chapterPages[0];
+
+            for (let page of chapterPages) {
+                if (pageNumber >= page) {
+                    chapterPage = page;
+                } else {
+                    break;
+                }
+            }
+
+            return chapters[chapterPage];
+        }
+
+        // Fungsi untuk menyimpan bookmark dengan informasi lebih lengkap
+        function saveBookmark(pageNumber) {
+            if (!isLocalStorageSupported()) {
+                alert('Browser Anda tidak mendukung penyimpanan bookmark');
+                return false;
+            }
+
+            const bookmarks = getBookmarks();
+
+            if (isPageBookmarked(pageNumber)) {
+                return false;
+            }
+
+            const chapterInfo = getChapterInfo(pageNumber);
+
+            // Tambah bookmark baru dengan informasi lebih lengkap
+            const newBookmark = {
+                id: Date.now().toString(),
+                pageNumber: pageNumber,
+                chapterName: chapterInfo.name,
+                arabicName: chapterInfo.arabicName,
+                timestamp: new Date().toISOString()
+            };
+
+            bookmarks.push(newBookmark);
+            localStorage.setItem('dalailul_bookmarks', JSON.stringify(bookmarks));
+            return true;
+        }
+        function isLocalStorageSupported() {
+            try {
+                localStorage.setItem('test', 'test');
+                localStorage.removeItem('test');
+                return true;
+            } catch (e) {
+                return false;
+            }
+        }
+
+        // Fungsi untuk mendapatkan semua bookmark
+        function getBookmarks() {
+            if (!isLocalStorageSupported()) return [];
+            const bookmarks = localStorage.getItem('dalailul_bookmarks');
+            return bookmarks ? JSON.parse(bookmarks) : [];
+        }
+        // Fungsi untuk mengecek apakah halaman sudah di-bookmark
+        function isPageBookmarked(pageNumber) {
+            const bookmarks = getBookmarks();
+            return bookmarks.some(b => b.pageNumber === pageNumber);
+        }
+
+        // Fungsi untuk mendapatkan nomor halaman dari URL
+        function getCurrentPage() {
+            const hash = window.location.hash;
+            if (!hash) return 1;
+            const matches = hash.match(/#p=(\d+)/);
+            return matches ? parseInt(matches[1]) : 1;
+        }
+
+        // Fungsi untuk mendapatkan judul halaman
+        function getPageTitle() {
+            return `Page ${getCurrentPage()}`;
+        }
+        function updateBookmarkIcon() {
+            const currentPage = getCurrentPage();
+            const $bookmarkBtn = $('#toggle-bookmark');
+
+            if (isPageBookmarked(currentPage)) {
+                $bookmarkBtn.addClass('active');
+            } else {
+                $bookmarkBtn.removeClass('active');
+            }
+        }
+        // Fungsi untuk menghapus bookmark berdasarkan nomor halaman
+        function removeBookmark(pageNumber) {
+            if (!isLocalStorageSupported()) {
+                alert('Browser Anda tidak mendukung penghapusan bookmark');
+                return false;
+            }
+
+            let bookmarks = getBookmarks();
+            const initialLength = bookmarks.length;
+
+            // Filter out bookmark dengan nomor halaman yang sama
+            bookmarks = bookmarks.filter(b => b.pageNumber !== pageNumber);
+
+            // Simpan kembali bookmark yang tersisa
+            localStorage.setItem('dalailul_bookmarks', JSON.stringify(bookmarks));
+
+            // Kembalikan true jika berhasil menghapus
+            return bookmarks.length < initialLength;
+        }
+        $(document).ready(function () {
+            const currentPage = getCurrentPage();
+            if (isPageBookmarked(currentPage)) {
+                $('#toggle-bookmark').addClass('active');
+            }
+        });
+        // Fungsi untuk menyimpan last read
+        function saveLastRead(pageNumber) {
+            if (!isLocalStorageSupported()) {
+                alert('Browser Anda tidak mendukung penyimpanan data');
+                return false;
+            }
+
+            const chapterInfo = getChapterInfo(pageNumber);
+
+            // Format data last read
+            const lastRead = {
+                pageNumber: pageNumber,
+                chapterName: chapterInfo.name,
+                arabicName: chapterInfo.arabicName,
+                timestamp: new Date().toISOString()
+            };
+
+            localStorage.setItem('dalailul_last_read', JSON.stringify(lastRead));
+            return true;
+        }
+
+        // Fungsi untuk mendapatkan last read
+        function getLastRead() {
+            if (!isLocalStorageSupported()) return null;
+
+            const lastRead = localStorage.getItem('dalailul_last_read');
+            return lastRead ? JSON.parse(lastRead) : null;
+        }
+
+        // Fungsi untuk menangani perubahan halaman
+        function handlePageChange() {
+            const currentPage = getCurrentPage();
+            saveLastRead(currentPage);
+        }
+
+        // Event handler saat dokumen siap
+        $(document).ready(function () {
+            // Monitor perubahan hash URL untuk mendeteksi perpindahan halaman
+            if (window.location.pathname.includes('reader.html')) {
+                $(window).on('hashchange', function () {
+                    handlePageChange();
+                });
+                // Simpan halaman pertama saat membuka reader
+                handlePageChange();
+            }
+        });
+        // Event handler saat dokumen siap
+        $(document).ready(function () {
+            // Update status bookmark saat halaman dimuat
+            updateBookmarkIcon();
+
+            // Update status bookmark saat hash URL berubah
+            $(window).on('hashchange', function () {
+                updateBookmarkIcon();
+            });
+
+            // Handler untuk tombol bookmark
+            $('#toggle-bookmark').click(function () {
+                const currentPage = getCurrentPage();
+
+                if (isPageBookmarked(currentPage)) {
+                    if (removeBookmark(currentPage)) {
+                        $(this).removeClass('active');
+                    }
+                } else {
+                    if (saveBookmark(currentPage)) {
+                        $(this).addClass('active');
+                    }
+                }
+            });
+        });
+        $(document).ready(function () {
+            $('.back-button').click(function () {
+                window.location.href = '/index.html';
+            });
+        });
+    </script>
+</body>
+
+</html>

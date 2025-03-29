@@ -1,0 +1,9 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+        <style name="Base.Theme.Dalailulkhairat" parent="Theme.Material3.DayNight.NoActionBar">
+            <item name="colorPrimary">@color/primary</item>
+            <item name="android:colorBackground">@color/background</item>
+            <item name="colorSurface">@color/surface</item>
+            <item name="android:textColor">@color/text_gray</item>
+            <item name="tabStyle">@style/CustomTabLayout</item>
+        </style>
+</resources>

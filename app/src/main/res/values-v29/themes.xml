@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="CustomTabLayout" parent="Widget.Material3.TabLayout">
+        <item name="tabIndicatorColor">@color/tab_indicator_color</item>
+        <item name="tabSelectedTextColor">@color/tab_selected_color</item>
+        <item name="tabTextColor">@color/text_gray</item>
+        <item name="tabIndicatorHeight">2dp</item>
+        <item name="android:forceDarkAllowed">false</item>
+    </style>
+</resources>

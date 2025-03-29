@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name" translatable="false">Dalailul Khairat</string>
+    <string name="settings" translatable="false">Settings</string>
+    <string name="last_read" translatable="false">Last Read</string>
+    <string name="go_to_page" translatable="false">Go to Page</string>
+    <string name="display_settings" translatable="false">Display Settings</string>
+    <string name="theme" translatable="false">Theme</string>
+    <string name="theme_light" translatable="false">Light</string>
+    <string name="theme_dark" translatable="false">Dark</string>
+    <string name="theme_system" translatable="false">Follow System</string>
+</resources>
