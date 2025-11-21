@@ -27,7 +27,6 @@ class ChapterFragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = chapterAdapter
 
-        // Tambahkan data chapter
         val chapters = listOf(
             Chapter(1, "Muqoddimah", "المقدمة", 1,2),
             Chapter(2, "Hari Senin", "يوم الإثنين", 25,26),

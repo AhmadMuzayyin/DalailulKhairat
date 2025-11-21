@@ -71,7 +71,6 @@ class BookmarkFragment : Fragment() {
         updateBookmarkList()
     }
 
-    // Tambahkan method untuk update dari activity jika diperlukan
     fun refreshBookmarks() {
         updateBookmarkList()
     }

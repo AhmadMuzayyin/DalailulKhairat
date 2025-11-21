@@ -13,6 +13,7 @@ import android.view.KeyEvent
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.WindowManager
 import android.webkit.JavascriptInterface
 import android.webkit.WebChromeClient
 import android.webkit.WebResourceError
@@ -61,23 +62,60 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
-        // Initialize managers
+        
         settingsManager = SettingsManager(this)
         bookmarkManager = BookmarkManager(this)
         soundPlayer = SoundPlayer(this)
-
-        // Initialize UI after content check
+        
+        // Terapkan pengaturan keep screen on
+        applyKeepScreenOnSetting()
+        
+        if (settingsManager.isFirstLaunch == true) {
+            Log.d("MainActivity", "This is first launch, going to mode selection")
+            startModeSelectionActivity()
+            return
+        }
+        
+        val mode = settingsManager.displayMode
+        if (mode.isNullOrEmpty()) {
+            settingsManager.isFirstLaunch = true
+            startModeSelectionActivity()
+            return
+        }
+        
+        if ((mode == SettingsManager.MODE_IMAGE && !settingsManager.isImageContentDownloaded) ||
+            (mode == SettingsManager.MODE_TEXT && !settingsManager.isTextContentDownloaded)) {
+            startModeSelectionActivity()
+            return
+        }
+        
+        // Verify content files exist
+        val baseDir = getExternalFilesDir(null)
+        val contentDir = if (mode == SettingsManager.MODE_IMAGE) ContentDownloader.IMAGE_DIR else ContentDownloader.TEXT_DIR
+        val readerFile = File("$baseDir/$contentDir/reader.html")
+        
+        if (!readerFile.exists()) {
+            if (mode == SettingsManager.MODE_IMAGE) {
+                settingsManager.isImageContentDownloaded = false
+            } else {
+                settingsManager.isTextContentDownloaded = false
+            }
+            startModeSelectionActivity()
+            return
+        }
+        
         setContentView(R.layout.activity_main)
         initViews()
         setupCardClickListeners()
         setupToolbar()
         setupViewPager()
         setupWebView()
-
-        // Inisialisasi theme manager
-//        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY)
+    }
+    
+    private fun startModeSelectionActivity() {
+        val intent = Intent(this, ModeSelectionActivity::class.java)
+        startActivity(intent)
+        finish()
     }
     private fun initViews() {
         toolbar = findViewById(R.id.toolbar)
@@ -86,6 +124,16 @@ class MainActivity : AppCompatActivity() {
         mainContent = findViewById(R.id.mainContent)
         webViewContainer = findViewById(R.id.webViewContainer)
         webView = findViewById(R.id.webView)
+    }
+    
+    private fun applyKeepScreenOnSetting() {
+        if (settingsManager.keepScreenOn) {
+            window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+            Log.d("MainActivity", "Keep screen on enabled")
+        } else {
+            window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+            Log.d("MainActivity", "Keep screen on disabled")
+        }
     }
 
     private fun setupCardClickListeners() {
@@ -258,7 +306,6 @@ class MainActivity : AppCompatActivity() {
                 error: WebResourceError?
             ) {
                 super.onReceivedError(view, request, error)
-                Log.e("WebView", "Error: ${error?.description}, Code: ${error?.errorCode}")
             }
         }
     }
@@ -315,14 +362,61 @@ class MainActivity : AppCompatActivity() {
                             updateBookmarkIcon(currentPage)
                             soundPlayer.playFlipSound()
                         } catch (e: Exception) {
-                            Log.e("WebView", "Error parsing page number: ${e.message}")
+                            return
                         }
                     }
                 }
             }
 
-            // Load from local storage instead of assets
-            webView.loadUrl("file:///android_asset/reader.html#p=$number")
+            val mode = settingsManager.displayMode
+            if (mode.isNullOrEmpty()) {
+                startModeSelectionActivity()
+                return
+            }
+            
+            val contentDir = if (mode == SettingsManager.MODE_IMAGE) {
+                ContentDownloader.IMAGE_DIR
+            } else {
+                ContentDownloader.TEXT_DIR
+            }
+            
+            val baseDir = getExternalFilesDir(null)
+            val externalReaderFile = File("$baseDir/$contentDir/reader.html")
+            
+            if (externalReaderFile.exists()) {
+                webView.loadUrl("file://${externalReaderFile.absolutePath}#p=$number")
+            } else {
+                try {
+                    val assetExists = try {
+                        assets.open("reader.html").close()
+                        true
+                    } catch (e: Exception) {
+                        false
+                    }
+                    
+                    if (assetExists) {
+                        webView.loadUrl("file:///android_asset/reader.html#p=$number")
+                    } else {
+                        if (mode == SettingsManager.MODE_IMAGE) {
+                            settingsManager.isImageContentDownloaded = false
+                        } else {
+                            settingsManager.isTextContentDownloaded = false
+                        }
+                        
+                        Toast.makeText(
+                            this,
+                            "Content files not found. Please select content type to download.",
+                            Toast.LENGTH_LONG
+                        ).show()
+                        
+                        startModeSelectionActivity()
+                        return
+                    }
+                } catch (e: Exception) {
+                    startModeSelectionActivity()
+                    return
+                }
+            }
             mainContent.visibility = View.GONE
             webViewContainer.visibility = View.VISIBLE
         } catch (e: Exception) {
@@ -335,13 +429,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun hideWebView() {
-        // Reset fullscreen mode
         if (isFullscreen) {
             isFullscreen = false
             setupWindowFlags()
         }
 
-        // Reset toolbar
         toolbar.navigationIcon = null
         toolbar.menu.clear()
         toolbar.inflateMenu(R.menu.top_menu)
@@ -352,16 +444,14 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // Clear WebView completely
         webView.apply {
-            clearHistory()           // Tambahkan ini
-            clearCache(true)         // Tambahkan ini
-            clearFormData()          // Tambahkan ini
-            clearSslPreferences()    // Tambahkan ini
+            clearHistory()       
+            clearCache(true)     
+            clearFormData()      
+            clearSslPreferences()
             loadUrl("about:blank")
         }
 
-        // Reset flags dan visibility
         isWebViewInitialized = false
         pendingPage = -1
         webViewContainer.visibility = View.GONE
@@ -392,7 +482,6 @@ class MainActivity : AppCompatActivity() {
     private fun toggleFullscreen() {
         isFullscreen = !isFullscreen
         setupWindowFlags()
-        // Update icon
         toolbar.menu.findItem(R.id.action_fullscreen)?.setIcon(
             if (isFullscreen) R.drawable.ic_fullscreen_exit
             else R.drawable.ic_fullscreen
@@ -422,7 +511,6 @@ class MainActivity : AppCompatActivity() {
             isFullscreen -> {
                 isFullscreen = false
                 setupWindowFlags()
-                // Update menu icon
                 toolbar.menu.findItem(R.id.action_fullscreen)?.setIcon(R.drawable.ic_fullscreen)
             }
             webViewContainer.visibility == View.VISIBLE -> {
@@ -454,6 +542,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        // Terapkan kembali pengaturan keep screen on (jika ada perubahan dari SettingsActivity)
+        applyKeepScreenOnSetting()
     }
 
     override fun onDestroy() {

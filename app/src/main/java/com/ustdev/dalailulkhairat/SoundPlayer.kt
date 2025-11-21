@@ -10,47 +10,29 @@ class SoundPlayer(private val context: Context) {
 
     fun playFlipSound() {
         if (!settingsManager.flipSound) {
-            Log.d("SoundPlayer", "Sound is disabled in settings")
             return
         }
 
         try {
             releaseMediaPlayer()
-
-            // List semua file di assets untuk debugging
-            context.assets.list("")?.forEach {
-                Log.d("SoundPlayer", "Asset root: $it")
-            }
-            context.assets.list("style")?.forEach {
-                Log.d("SoundPlayer", "Asset style/: $it")
-            }
-            context.assets.list("style/raw")?.forEach {
-                Log.d("SoundPlayer", "Asset style/raw/: $it")
-            }
-
-            // Load dan play sound
-            val assetPath = "style/raw/flipsound.mp3" // atau flipsound.ogg sesuai file yang ada
+            val assetPath = "flipsound.mp3"
             mediaPlayer = MediaPlayer().apply {
                 context.assets.openFd(assetPath).use { afd ->
                     setDataSource(afd.fileDescriptor, afd.startOffset, afd.length)
                 }
                 setOnPreparedListener { mp ->
                     mp.start()
-                    Log.d("SoundPlayer", "Sound started playing")
                 }
                 setOnErrorListener { _, what, extra ->
-                    Log.e("SoundPlayer", "MediaPlayer Error: $what, $extra")
                     false
                 }
                 setOnCompletionListener {
-                    Log.d("SoundPlayer", "Sound finished playing")
                     releaseMediaPlayer()
                 }
                 prepareAsync()
             }
 
         } catch (e: Exception) {
-            Log.e("SoundPlayer", "Error playing sound", e)
             e.printStackTrace()
         }
     }
@@ -62,11 +44,10 @@ class SoundPlayer(private val context: Context) {
                     mp.stop()
                 }
                 mp.release()
-                Log.d("SoundPlayer", "MediaPlayer released")
             }
             mediaPlayer = null
         } catch (e: Exception) {
-            Log.e("SoundPlayer", "Error releasing MediaPlayer", e)
+            e.printStackTrace()
         }
     }
 

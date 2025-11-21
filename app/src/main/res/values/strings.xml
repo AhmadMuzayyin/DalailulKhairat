@@ -8,4 +8,6 @@
     <string name="theme_light" translatable="false">Light</string>
     <string name="theme_dark" translatable="false">Dark</string>
     <string name="theme_system" translatable="false">Follow System</string>
+    <string name="star_icon" translatable="false">Star Icon</string>
+    <string name="delete_button" translatable="false">Delete</string>
 </resources>

@@ -1,1 +1,0 @@
-﻿positionForPages[59] = {"page":60, "positions":[]};

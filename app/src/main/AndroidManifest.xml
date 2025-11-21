@@ -27,6 +27,11 @@
             android:exported="false"
             android:label="Settings"
             android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".ModeSelectionActivity"
+            android:exported="false"
+            android:label="Select Mode"
+            android:theme="@style/Theme.Dalailulkhairat" />
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"
@@ -46,12 +51,4 @@
         android:maxSdkVersion="32" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
-
-    <!-- For Android 13 and above -->
-    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
-    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
-    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
-
-    <!-- For Notification -->
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
 </manifest>

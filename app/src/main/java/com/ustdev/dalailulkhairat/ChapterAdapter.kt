@@ -29,7 +29,6 @@ class ChapterAdapter : RecyclerView.Adapter<ChapterAdapter.ChapterViewHolder>() 
         holder.titleArabicText.text = "(${chapter.arabicTitle})"
         holder.pageText.text = chapter.page.toString()
 
-        // Tambahkan click listener
         holder.itemView.setOnClickListener {
             val activity = holder.itemView.context as? MainActivity
             activity?.showWebView(chapter.page)

@@ -11,4 +11,5 @@
     <color name="background">#FFFFFF</color>
     <color name="surface">#7E7E7E</color>
     <color name="text_secondary">#FFFFFF</color>
+    <color name="delete_red">#D32F2F</color>
 </resources>

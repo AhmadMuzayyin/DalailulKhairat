@@ -11,8 +11,8 @@ android {
         applicationId = "com.ustdev.dalailulkhairat"
         minSdk = 21
         targetSdk = 34
-        versionCode = 1
-        versionName = "1.1"
+        versionCode = 2
+        versionName = "2.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         ndk {
@@ -54,4 +54,6 @@ dependencies {
     implementation("com.github.bumptech.glide:glide:4.16.0")
     implementation("androidx.core:core-splashscreen:1.0.1")
     implementation("org.eclipse.jgit:org.eclipse.jgit:6.7.0.202309050840-r")
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
 }
